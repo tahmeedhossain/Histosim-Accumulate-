@@ -1,0 +1,264 @@
+<header class="desk">
+  <div class="wrap">
+    <div class="brand">
+      <div class="label">A world-system game · 1800–2026</div>
+      <h1>Accumulate<span class="bang">!</span></h1>
+      <p class="epigraph">“Accumulate, accumulate! That is Moses and the prophets!” Marx, <i>Capital</i>, vol. I, ch. 24</p>
+    </div>
+    <div class="clock" aria-live="polite">
+      <div class="year" id="yearOut">1801</div>
+      <div class="phase" id="phaseOut">Competitive industrial capitalism</div>
+      <div class="regime" id="regimeOut">Gold standard</div>
+    </div>
+    <div class="controls">
+      <div class="ctl-row">
+        <button class="btn primary" id="playBtn" type="button">Play</button>
+        <button class="btn" id="stepBtn" type="button">+1 year</button>
+        <button class="btn" id="endBtn" type="button">Run to 2026</button>
+        <button class="btn" id="resetBtn" type="button">Restart</button>
+      </div>
+      <div class="ctl-row">
+        <label class="field" for="speedSel">Speed
+          <select id="speedSel">
+            <option value="1">1 year/s</option>
+            <option value="3" selected>3 years/s</option>
+            <option value="8">8 years/s</option>
+            <option value="20">20 years/s</option>
+          </select>
+        </label>
+        <label class="field" for="seedIn">Seed <input type="number" id="seedIn" value="1917" min="1" max="999999" inputmode="numeric"></label>
+        <label class="check" for="pauseChk"><input type="checkbox" id="pauseChk" checked> Pause at turning points</label>
+      </div>
+      <div class="timeline">
+        <label class="label" for="scrub">Timeline</label>
+        <input type="range" id="scrub" min="1801" max="1801" value="1801">
+        <span class="vy" id="scrubOut">latest 1801</span>
+      </div>
+      <div class="ctl-row"><button class="btn small" id="branchBtn" type="button" disabled>Branch from viewed year</button><span class="muted" style="font-size: var(--step--1)">Drag back to inspect a year; branch to rerun from it with the current levers.</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap intro" aria-label="About">
+    <p>A stock-flow model of the capitalist world-system, run one year at a time from 1800 to 2026. No stage is scheduled. Monopoly, finance capital, imperialism, the dollar system and the nationalist turn begin when the model’s own variables cross thresholds, and the levers change the forces that move those variables. The model is stylised and calibrated to the historical anchors listed in the notes. It shows mechanisms; it is not a forecast.</p>
+    <ol>
+      <li>Press <b>Play</b>. At each turning point the run pauses and explains what in the model caused it, with its historical counterpart and sources.</li>
+      <li>Read the instruments: capacity against mass consumption, exploitation and profit, Lenin’s five features, the drain from the periphery, money, class power and lives lost.</li>
+      <li>Move a lever at any time. It acts from the next year; grey lines then show the calibrated run for comparison.</li>
+      <li>Drag the timeline back to inspect any year, or branch the run from it.</li>
+    </ol>
+  </section>
+
+  <section class="wrap block" id="world" aria-label="World system">
+    <div class="stage">
+      <div class="panel map">
+        <div class="panel-head"><h3>World-system schematic</h3><span class="label">not a geographic map</span></div>
+        <svg id="mapSvg" viewBox="0 0 640 444" role="img" aria-labelledby="mapTitle mapDesc"><title id="mapTitle">World-system schematic</title><desc id="mapDesc">The core and three outer zones.</desc></svg>
+        <p class="muted" style="font-size: var(--step--1); margin-top: 6px">Blue arrows run from each outer zone to the core; their width grows with the drain (tribute, repatriated profit, unequal exchange, debt service). In the core, dark bars show each power’s share of core output and amber bars its share of the colonies. Red figures are excess deaths this year, including chronic poverty.</p>
+      </div>
+      <div class="panel phase-card" id="phaseCard" aria-live="polite">
+        <div class="label">Current stage</div>
+        <h2 id="pcTitle">Competitive industrial capitalism</h2>
+        <div class="meta" id="pcMeta"></div>
+        <p class="mech" id="pcMech"></p>
+        <div class="hist" id="pcHist"></div>
+      </div>
+    </div>
+    <div class="tiles" id="tiles" aria-label="Indicators"></div>
+    <div class="duo">
+      <div class="panel">
+        <div class="panel-head"><h3>Lenin’s five features</h3><a href="https://www.marxists.org/archive/lenin/works/1916/imp-hsc/ch07.htm" target="_blank" rel="noopener">Imperialism, ch. VII</a></div>
+        <ul class="feat" id="featList"></ul>
+        <p class="stage-line" id="featLine"></p>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Contradictions</h3><a href="https://www.marxists.org/reference/archive/mao/selected-works/volume-1/mswv1_17.htm" target="_blank" rel="noopener">Mao, On Contradiction</a></div>
+        <ul class="contra" id="contraList"></ul>
+        <p class="stage-line">Each bar is an index from 0 to 100 computed from model variables. The longest is marked principal, after the distinction Mao draws in <i>On Contradiction</i> (1937), section IV. The formulas are in the notes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" id="instruments" aria-label="Instruments">
+    <div class="sec-head"><h2>Instruments</h2><p>Coloured lines show this run up to the current year. Grey lines show the calibrated run when the levers differ from it. Hollow circles are historical data for comparison, not model inputs. Every chart has a table view.</p></div>
+    <div>
+      <div class="tabs" role="tablist" id="tabs" aria-label="Instrument groups"></div>
+      <div class="tabpanel" role="tabpanel" id="tabPanel"></div>
+    </div>
+  </section>
+
+  <section class="wrap block" id="control" aria-label="Levers and chronicle">
+    <div class="two">
+      <div class="panel">
+        <div class="panel-head"><h2>Levers</h2><button class="btn small" id="leverReset" type="button">Back to calibration</button></div>
+        <p class="muted" style="font-size: var(--step--1)">50 is the calibrated value. Each lever scales one force in the model from ×0 to ×2. Changes act from the next simulated year. Presets restart the run from 1800 and play it.</p>
+        <div class="presets" id="presets" style="margin-top: 10px"></div>
+        <div class="levers" id="leverList"></div>
+        <p class="notice" style="margin-top: 12px">Settings far from 50 take the model outside the range it was calibrated for. Read such runs for direction and sequence, not for dates or magnitudes.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Chronicle</h2><label class="check" for="minorChk"><input type="checkbox" id="minorChk"> Show minor events</label></div>
+        <ul class="chron" id="chron"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" id="ledger" aria-label="Ledger of lives">
+    <div class="sec-head"><h2>Ledger of lives</h2><p>Attributable deaths are the ones the model assigns to its mechanisms of war, drain, repression and crisis, under the counterfactuals stated in each row. Total excess deaths add chronic-poverty mortality measured against a high-consumption benchmark; that column is context, not a charge sheet.</p></div>
+    <div class="panel"><div class="tablewrap"><table class="ledger-table" id="ledgerTable"></table></div></div>
+    <div class="panel">
+      <h3>Not in the model</h3>
+      <ul class="notmod" style="margin-top: 8px">
+        <li>Deaths inside zones while they are socialist or restored are not computed, so the model cannot compare economic systems. For reference, Ó Gráda (2007) reports archival estimates of 4–6 million for the Soviet famine of 1932–33 (Conquest had 7 million) and academic estimates of 15–43 million for the Chinese famine of 1959–61. Drèze and Sen argued that, because of India’s higher normal death rate, “every eight years or so more people die in India” than died in China’s 1958–61 famine (quoted in Sullivan &amp; Hickel 2023). Deaths from political repression inside socialist states are not modelled either.</li>
+        <li>Slavery in the Americas, which lasted in the United States until 1865 and in Brazil until 1888, is not modelled.</li>
+        <li>The Congo Free State: Frankema and Jerven estimate a population fall of about 1.9 million (19%) in 1890–1920; much higher popular figures are disputed (as tabulated in Sullivan &amp; Hickel 2023).</li>
+        <li>Environmental deaths, including from air pollution and climate change, are not modelled.</li>
+      </ul>
+      <ul class="refs" style="margin-top: 8px">
+        <li><a href="https://researchrepository.ucd.ie/rest/bitstreams/1368/retrieve" target="_blank" rel="noopener">Ó Gráda, “Making Famine History”, Journal of Economic Literature 45 (2007)</a></li>
+        <li><a href="https://ddd.uab.cat/pub/artpub/2023/319e76b138b3/Capitalism_and_extreme_poverty.pdf" target="_blank" rel="noopener">Sullivan &amp; Hickel, World Development 161 (2023)</a></li>
+        <li><a href="https://worldpeacefoundation.org/wp-content/uploads/2025/01/Historic-Famines-synthesis-table-191224.pdf" target="_blank" rel="noopener">World Peace Foundation, historic famines table</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap block" id="notes" aria-label="How the model works">
+    <div class="sec-head"><h2>How the model works</h2><p>Everything that drives a run is listed here: the structure, the main relations, the thresholds, the exogenous inputs and the calibration, including where the model misses.</p></div>
+    <div class="notes">
+      <details open>
+        <summary>Structure</summary>
+        <div class="body">
+          <p>The model has four zones. The core holds three capitalist powers: an old power, a challenger and a rising power, which grow at different exogenous rates and hold different shares of the colonies. Zone A is modelled on Russia and the USSR, zone B on China, and zone C on the colonised and later formally independent world. Each zone is a single aggregate.</p>
+          <p>Each simulated year runs in this order: uneven growth among the core powers; harvest, output, distribution and drain in each outer zone; capacity, spending, utilisation, wages and accumulation in the core; capital export and finance; labour organisation, militancy, legitimacy and nationalism; monopoly, money and the hegemon; rivalry and war; revolution, restoration and debt; changes of regime; deaths; indicators.</p>
+          <p>Money is in model dollars, scaled loosely to Maddison’s 1990 international dollars. Population and deaths are in millions. A seed fixes the random draws (harvest failures, small shocks to investment and to the timing of wars and coups). The same seed and levers always reproduce the same history. In eight seeds tested, dates moved by up to two decades (the depression between 1923 and 1932, the neoliberal turn between 1964 and 1983). In two of those seeds the order also changed: the profit squeeze came before the dollar left gold, and the financial crisis before zone B became a rival.</p>
+          <p>The calibrated run (seed 1917, all levers at 50) was tuned by hand so that major turning points fall near their historical dates. Nothing was fitted statistically.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Main relations</summary>
+        <div class="body">
+          <ul class="eq-list">
+            <li><span class="eq">Capacity Y* = min(K ÷ κ, A × N)</span>, where K is capital, κ the capital-output ratio, A labour productivity and N the wage-labour force. Output sold <span class="eq">Y = u × Y*</span>.</li>
+            <li><span class="eq">D = [(1 − m)(mass consumption + capitalists’ consumption) + I + G + X + sales to non-capitalist producers] ÷ Y*</span>. Utilisation u moves 70% of the way toward <span class="eq">1 − 1.25 × (1 − D)</span> each year; m is the import share.</li>
+            <li><span class="eq">Mass consumption = (1 − t<sub>w</sub>) ω Y* + transfers + new household credit − debt service</span>.</li>
+            <li><span class="eq">Investment rate = depreciation + innovation drive + 0.6 (r − hurdle) + 0.1 (capital utilisation − 0.92)</span>, times <span class="eq">(1 − 0.25 M)(1 + 0.2 F)</span> and a confidence factor after crashes. The hurdle rises with the real interest rate. After a crash under gold, the confidence factor falls further the higher the monopoly index.</li>
+            <li><span class="eq">Wage-share target = 0.552 + 0.25 O × labour lever + 0.9 (employment rate − 0.92) + 0.06 LA + 0.03 × socialist threat − 0.03 M − 0.05 × arbitrage + regime premium − 0.06 × fascism</span>; the employment term is capped. The wage share ω moves 20% of the way toward the target each year.</li>
+            <li><span class="eq">r = [(1 − t<sub>p</sub>)(1 − ω) Y + foreign income − depreciation − oil rent] ÷ (K + capital abroad)</span>.</li>
+            <li>The monopoly index M grows with technical change and faster in crises (centralisation), more so where finance is strong; antitrust reduces it. The finance index F grows with M under deregulation; regulation reduces it.</li>
+            <li><span class="eq">Labour aristocracy LA = 2.6 × aristocracy lever × foreign income ÷ gross profit</span>.</li>
+            <li><span class="eq">Drain from an outer zone = tribute + repatriated profit + unequal exchange + debt service</span> (+ opium and silver before 1912). <span class="eq">Unequal exchange = (0.10 + 0.16 M) × exports</span>, scaled by the extraction lever; zero for socialist and restored zones.</li>
+            <li><span class="eq">Rivalry = Div<sup>7</sup> × (2.2 × the challenger’s excess of output share over colony share + 0.35 × the rising power’s) × (1 + 1.2 × fascism + 0.4 × nationalism) × (1 + 0.6 × slack)</span>, damped before monopoly and after 1950. Tension accumulates while rivalry exceeds 0.38.</li>
+            <li><span class="eq">New household credit = availability × 0.62 × (consumption norm − disposable wages net of debt service)</span>; the norm rises with the top 1% share. Availability falls in crashes and after a big one.</li>
+            <li>Contradiction indices, each capped at 100: labour–capital <span class="eq">0.9 U + 0.9 militancy + 1.5 × max(0, 0.62 − ω)</span>; oppressed nations <span class="eq">2.2 × zone C drain share + 0.35 immiseration + 0.25 repression</span> (+0.15 under colonial rule); inter-imperialist <span class="eq">1.6 × rivalry</span> (+0.6 in war); camp <span class="eq">1.2 × socialist threat</span>; forces–relations <span class="eq">2.4 (1 − u) + 0.25 (1 − mass consumption ÷ capacity)</span>; hegemon–rival <span class="eq">0.75 × rival weight</span> (+0.2 under nationalism); peasants–landlords <span class="eq">0.8 × zone B immiseration + 0.1</span> while zone B is semi-feudal.</li>
+            <li>Chronic-poverty mortality: consumption in each outer zone is spread lognormally (σ = 0.6) over ten deciles; excess mortality per decile is <span class="eq">k(t) × [e<sup>−1.2(c − 1)</sup> − e<sup>−1.2 × 2.9</sup>]</span> below c = 3.9 times bare subsistence, where k(t) falls with health technology. Attributable deaths compare actual consumption with consumption if 40% of the retainable drain (tribute, opium, debt service, half of unequal exchange) had stayed in the zone.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Thresholds that switch stages</summary>
+        <div class="body">
+          <div class="tablewrap"><table>
+            <thead><tr><th>Event</th><th class="wrap" style="text-align:left">Condition in the model</th></tr></thead>
+            <tbody>
+              <tr><td>Agrarian empire forced open</td><td class="wrap" style="text-align:left">core spheres cover 64% of zone C and core output exceeds 340</td></tr>
+              <tr><td>Lenin’s five features</td><td class="wrap" style="text-align:left">M ≥ 35%; F ≥ 40% with M ≥ 30%; capital abroad ≥ 13% of core capital; M × capital-abroad share × 5 ≥ 25%; 88% of the dominated population inside spheres</td></tr>
+              <tr><td>First inter-imperialist war</td><td class="wrap" style="text-align:left">world 87% divided, M &gt; 33%, accumulated tension above 0.42–0.52 (random), 15 years after the last war</td></tr>
+              <tr><td>Revolution in zone A</td><td class="wrap" style="text-align:left">during or just after a war, zone A organisation &gt; 20% and immiseration &gt; 40%</td></tr>
+              <tr><td>Great depression</td><td class="wrap" style="text-align:left">a crash under the restored gold standard, or after 1925 five years of unemployment above 10%, or 20 years of interwar regime</td></tr>
+              <tr><td>Fascism</td><td class="wrap" style="text-align:left">three years of depression, nationalism &gt; 20%, militancy &gt; 14% or a socialist threat, finance index &gt; 25%</td></tr>
+              <tr><td>War launched by fascist powers</td><td class="wrap" style="text-align:left">six years of fascism and accumulated tension (fascism adds tension every year)</td></tr>
+              <tr><td>Revolution in zone B</td><td class="wrap" style="text-align:left">liberated areas above 50% at least three years after the fascist war, or above 80%</td></tr>
+              <tr><td>Decolonisation, independence</td><td class="wrap" style="text-align:left">after the fascist war, or after 1950 if zone C nationalism &gt; 45%; independence when colonial control falls below 12%</td></tr>
+              <tr><td>Capitalist restoration</td><td class="wrap" style="text-align:left">revisionism index reaches 1; it grows with the age of the socialist state and more slowly under mass supervision</td></tr>
+              <tr><td>Profit squeeze</td><td class="wrap" style="text-align:left">15 years into the compromise, profit rate below 86% of its post-war peak with inflation above 4.5% for two years, or long stagnation</td></tr>
+              <tr><td>Dollar leaves gold</td><td class="wrap" style="text-align:left">dollar claims abroad exceed 3.8 times the gold stock</td></tr>
+              <tr><td>Neoliberal turn or radical reform</td><td class="wrap" style="text-align:left">nine years of stagflation; radical reform if labour’s power exceeds capital’s minus 0.02, otherwise neoliberalism</td></tr>
+              <tr><td>Debt crisis</td><td class="wrap" style="text-align:left">zone C debt service above 15% of exports while the core interest rate exceeds 12%</td></tr>
+              <tr><td>Collapse of the restored bloc</td><td class="wrap" style="text-align:left">legitimacy below 26% under neoliberalism</td></tr>
+              <tr><td>Reform zone becomes a rival</td><td class="wrap" style="text-align:left">openness of zone B above 52%</td></tr>
+              <tr><td>Financial crash</td><td class="wrap" style="text-align:left">household debt service above 7.5% of wages or debt above the wage bill; or a bubble above 1.42 when credit tightens</td></tr>
+              <tr><td>Nationalist turn</td><td class="wrap" style="text-align:left">nationalism &gt; 48%, legitimacy &lt; 46%, manufacturing 30% below its peak, rival weight &gt; 40%, after 1995</td></tr>
+              <tr><td>Labour arbitrage; monopoly-finance capital</td><td class="wrap" style="text-align:left">offshored share above 12%; F &gt; 62% with finance above 25% of profits and M &gt; 55%</td></tr>
+              <tr><td>Sanctions as a weapon</td><td class="wrap" style="text-align:left">sanctions intensity above 30%</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </details>
+      <details>
+        <summary>Exogenous inputs</summary>
+        <div class="body">
+          <ul class="eq-list">
+            <li>Technical potential: productivity growth available at normal investment, 0.8% a year in 1800, rising to 2.7% around 1950, then 1.4% in 1975 and 1.0% in 2026. Actual productivity growth also depends on investment and the wage share.</li>
+            <li>Capital-saving innovation, which lowers the capital-output ratio.</li>
+            <li>Proletarianisation: wage workers are 50% of the core labour force in 1800 and 96% in 2026.</li>
+            <li>Population growth without excess deaths, by zone (the demographic transition). Excess deaths are subtracted each year.</li>
+            <li>Agricultural technique in the outer zones, faster after the mid-1960s; health technology, which lowers the mortality caused by a given consumption shortfall (an index falling from 2.6 in 1800 to 0.68 in 2026).</li>
+            <li>The manufacturing share of core output and employment; a transport-cost index.</li>
+            <li>The relative growth of the three core powers (uneven development).</li>
+            <li>Drought years in zones B and C: 1876–79, 1889–91 and 1896–1902, the clusters identified by Davis (2001). Their severities are model assumptions.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Calendar switches in the code</summary>
+        <div class="body">
+          <p>These mechanisms depend on the calendar year, not on the model’s state, so levers and seeds do not move them. They pull every run toward the historical clock.</p>
+          <ul class="eq-list">
+            <li>Outer zones: room for modern-sector employment opens from 1850 and widens from 1950; semi-periphery investment rises over 1880–1910; national movements grow faster after 1880; the semi-colony becomes easier to penetrate after 1885; craft industry is destroyed more slowly from 1950; investment and catch-up in independent zone C rise from 1990.</li>
+            <li>Drain and debt: the opium drain stops in 1912; household credit in the core is limited to a quarter of its later scale before 1946.</li>
+            <li>Rivalry and war: rivalry over colonies is damped to 15% of its strength after 1950 (and during the compromise and stagflation regimes), so a war for redivision after 1950 needs extreme rivalry; a fascist regime can still start one. No run has more than two world wars.</li>
+            <li>Liberation and intervention: liberated zones in zone C can form only after 1940; the fallback route to decolonisation opens after 1950; proxy wars are weaker from 1980; coups end after 1991.</li>
+            <li>Crisis and politics: the stagnation route to a general crisis opens after 1925; offshoring under stagflation is possible only after 1975; deindustrialisation feeds nationalism only from 1991 and the rival’s weight only from 2006; the nationalist turn cannot come before 1996; deaths of despair are counted from 1986.</li>
+            <li>Money and the rival: tariffs fall from 1947 under the compromise; dollar sanctions start after 1990, hitting zone A at full weight from 2014 and zone B from 2019; the rival exports capital from 2011.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Calibration: data against the calibrated run</summary>
+        <div class="body">
+          <div class="tablewrap"><table>
+            <thead><tr><th>Anchor</th><th>Data</th><th>Calibrated run</th></tr></thead>
+            <tbody id="calibBody"></tbody>
+          </table></div>
+          <p>Dates are the first year the model enters the stage. The model reaches some stages a year or two early or late and misses some levels by a wide margin; the table shows both.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Limits and known errors</summary>
+        <div class="body">
+          <ul class="eq-list">
+            <li>Each zone is one aggregate. There is no geography, no separate states inside a zone, and no ecological limit.</li>
+            <li>Thresholds are modelling choices, and moving them moves dates. They are all listed above.</li>
+            <li>The reserve army includes underemployment, so nineteenth-century slumps (peaks of 20–29%) look deeper than measured unemployment would.</li>
+            <li>Unemployment after the 2009 crash and around 2021 runs higher than core data, at 12–16%. The model has no pandemic; its slump of the early 2020s comes from its own financial cycle.</li>
+            <li>The finance share of profits is too high in 1950 (16% against 8.8% in US data) and falls during zero interest rates in the 2010s, which US data do not show.</li>
+            <li>Restoration dates follow the MLM periodisation. The model cannot test whether a restoration happened; the revisionism index is a device that makes the thesis runnable, not a measurement.</li>
+            <li>Socialist and restored zones have simplified economies, and deaths inside them are not computed.</li>
+            <li>Attributable deaths depend on the counterfactual of 40% of the retainable drain kept at home, and change with it.</li>
+            <li>The run stops in 2026 because that is the present. Values for 2026 are the model’s, not a forecast.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Sources</summary>
+        <div class="body src" id="sources"></div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">Accumulate! is a teaching model. Seed 1917 with all levers at 50 reproduces the calibrated run. The full model is in the page source.</footer>
+
+<div class="turn" id="turn" hidden role="dialog" aria-labelledby="turnTitle">
+  <div class="ey"><span class="label" id="turnKind">Turning point</span><span class="label" id="turnYear"></span></div>
+  <h2 id="turnTitle"></h2>
+  <p class="mech" id="turnMech"></p>
+  <div class="hist" id="turnHist"></div>
+  <div id="turnRefs"></div>
+  <p class="muted" id="turnAlso" style="font-size: var(--step--1); margin-top: 8px"></p>
+  <div class="acts">
+    <button class="btn" id="turnClose" type="button">Stay paused</button>
+    <button class="btn primary" id="turnGo" type="button">Continue</button>
+  </div>
+</div>

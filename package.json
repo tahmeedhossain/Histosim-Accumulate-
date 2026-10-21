@@ -1,0 +1,14 @@
+{
+  "name": "accumulate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A year-by-year simulation of the capitalist world-system, 1800–2026.",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "calibration": "node test/calibration.js",
+    "seeds": "node test/seeds.js",
+    "levers": "node test/levers.js",
+    "test": "node test/robust.js"
+  }
+}
