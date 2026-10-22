@@ -2,7 +2,7 @@
 
 A year-by-year simulation of the capitalist world-system from 1800 to 2026. No stage is scheduled. Monopoly, finance capital, imperialism, the dollar system and the nationalist turn begin when the model's own variables cross thresholds, and ten levers change the forces behind those variables, so events can move, change order or not happen at all. The model is stylised and calibrated to historical anchors; it shows mechanisms and is not a forecast.
 
-Live version: https://claude.ai/artifact/PWZ1RpY1SrDHkj3g2Z3VXf
+Play online: https://tahmeedhossain.github.io/Histosim-Accumulate-/ (also at https://claude.ai/artifact/PWZ1RpY1SrDHkj3g2Z3VXf)
 
 ## Play it
 
